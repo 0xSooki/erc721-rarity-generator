@@ -7,10 +7,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node index.js"
   },
-  "author": "",
+  "author": "Sooki (@0xSooki)",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.0.1",
-    "moralis": "^1.7.0"
+    "@alch/alchemy-sdk": "^1.2.0",
+    "alchemy-sdk": "^2.0.1",
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.20.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1"
   }
 }

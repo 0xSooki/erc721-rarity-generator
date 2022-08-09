@@ -1,37 +1,36 @@
-const Moralis = require("moralis/node");
 const basePath = process.cwd();
-require("dotenv").config();
-const fs = require("fs");
-const {
-  contractAddress,
-  collectionName,
-  upload,
-  json,
-  logUpload,
-  logPages,
-} = require(`${basePath}/src/config.js`);
+require('dotenv').config();
+const fs = require('fs');
+const { contractAddress, fileName, logPages } = require(`${basePath}/src/config.js`);
 const buildDir = `${basePath}/build`;
+const { Network, Alchemy } = require('alchemy-sdk');
 
-const serverUrl = process.env.SERVER_URL;
-const appId = process.env.APP_ID;
+const settings = {
+  apiKey: process.env.ALCHEMY_API_KEY,
+  network: Network.ETH_MAINNET
+};
 
-Moralis.start({ serverUrl, appId });
+const alchemy = new Alchemy(settings);
+
+const getNFTsForCollectionOnce = async (pageKey) => {
+  const response = await alchemy.nft.getNftsForContract(contractAddress, {
+    pageKey: pageKey,
+    withMetadata: true
+  });
+  return response;
+};
 
 const resolveLink = (url) => {
-  if (!url || !url.includes("ipfs://")) return url;
-  return url.replace("ipfs://", "https://gateway.ipfs.io/ipfs/");
+  if (!url || !url.includes('ipfs://')) return url;
+  return url.replace('ipfs://', 'https://gateway.ipfs.io/ipfs/');
 };
 
 const buildSetup = () => {
-  if (json) {
-    if (fs.existsSync(buildDir)) {
-      fs.rmdirSync(buildDir, { recursive: true });
-    }
-    fs.mkdirSync(buildDir);
-    if (json) {
-      fs.mkdirSync(`${buildDir}/json`);
-    }
+  if (fs.existsSync(buildDir)) {
+    fs.rmdirSync(buildDir, { recursive: true });
   }
+  fs.mkdirSync(buildDir);
+  fs.mkdirSync(`${buildDir}/json`);
 };
 
 function roundToHundredth(num) {
@@ -39,61 +38,51 @@ function roundToHundredth(num) {
 }
 
 const generateRarity = async () => {
-  let cursor = null;
   let metadata = [];
   let allNfts = [];
 
-  do {
-    const response = await Moralis.Web3API.token.getAllTokenIds({
-      address: contractAddress,
-      chain: "eth",
-      limit: 500,
-      cursor: cursor,
-    });
+  let nextPage = '';
+  while (nextPage || nextPage === '') {
+    const { nfts, pageKey } = await getNFTsForCollectionOnce(nextPage);
     if (logPages) {
-      console.log(
-        `Got page ${response.page} of ${Math.ceil(
-          response.total / response.page_size
-        )}, ${response.total} total`
-      );
+      console.log(nfts);
     }
-
-    for (const token of response.result) {
-      if (token.metadata) {
-        metadata.push(JSON.parse(token.metadata).attributes);
+    for (const token of nfts) {
+      if (token.rawMetadata.attributes) {
+        metadata.push(token.rawMetadata.attributes);
         allNfts.push(token);
       }
     }
-    cursor = response.cursor;
-  } while (cursor != "" && cursor != null);
-
-  total = metadata.length;
+    nextPage = pageKey;
+  }
+  let total = metadata.length;
   let tally = { TraitCount: {} };
   for (let i = 0; i < metadata.length; i++) {
-    let traits = metadata[i].map((e) => e.trait_type);
-    let values = metadata[i].map((e) => e.value);
+    if (metadata[i]) {
+      let traits = metadata[i].map((e) => e.trait_type);
+      let values = metadata[i].map((e) => e.value);
+      let numOfTraits = traits.length;
 
-    let numOfTraits = traits.length;
-
-    if (tally.TraitCount[numOfTraits]) {
-      tally.TraitCount[numOfTraits]++;
-    } else {
-      tally.TraitCount[numOfTraits] = 1;
-    }
-    for (let j = 0; j < traits.length; j++) {
-      let current = traits[j];
-
-      if (tally[current]) {
-        tally[current].occurences++;
+      if (tally.TraitCount[numOfTraits]) {
+        tally.TraitCount[numOfTraits]++;
       } else {
-        tally[current] = { occurences: 1 };
+        tally.TraitCount[numOfTraits] = 1;
       }
+      for (let j = 0; j < traits.length; j++) {
+        let current = traits[j];
 
-      let currentValue = values[j];
-      if (tally[current][currentValue]) {
-        tally[current][currentValue]++;
-      } else {
-        tally[current][currentValue] = 1;
+        if (tally[current]) {
+          tally[current].occurences++;
+        } else {
+          tally[current] = { occurences: 1 };
+        }
+
+        let currentValue = values[j];
+        if (tally[current][currentValue]) {
+          tally[current][currentValue]++;
+        } else {
+          tally[current][currentValue] = 1;
+        }
       }
     }
   }
@@ -111,12 +100,11 @@ const generateRarity = async () => {
       totalRarity += rarityScore;
     }
 
-    let rarityScoreNumTraits =
-      8 * (1 / (tally.TraitCount[Object.keys(current).length] / total));
+    let rarityScoreNumTraits = 8 * (1 / (tally.TraitCount[Object.keys(current).length] / total));
     current.push({
-      trait_type: "TraitCount",
+      trait_type: 'TraitCount',
       value: Object.keys(current).length,
-      rarityScore: roundToHundredth(rarityScoreNumTraits),
+      rarityScore: roundToHundredth(rarityScoreNumTraits)
     });
     totalRarity += rarityScoreNumTraits;
 
@@ -128,14 +116,13 @@ const generateRarity = async () => {
         current.push({
           trait_type: type,
           value: null,
-          rarityScore: roundToHundredth(rarityScoreNull),
+          rarityScore: roundToHundredth(rarityScoreNull)
         });
         totalRarity += rarityScoreNull;
       });
     }
 
     if (allNfts[i]?.metadata) {
-      allNfts[i].metadata = JSON.parse(allNfts[i].metadata);
       allNfts[i].image = resolveLink(allNfts[i].metadata?.image);
     } else if (allNfts[i].token_uri) {
       try {
@@ -148,48 +135,24 @@ const generateRarity = async () => {
         console.log(err);
       }
     }
-
     nftArr.push({
       Attributes: current,
       Rarity: Math.round(100 * totalRarity) / 100,
-      token_id: allNfts[i].token_id,
-      image: allNfts[i].image,
+      token_id: parseInt(allNfts[i].tokenId),
+      image: allNfts[i].rawMetadata.image
     });
   }
 
   nftArr.sort((a, b) => b.Rarity - a.Rarity);
 
   // Save data as JSON file
-  if (json) {
-    data = JSON.stringify(nftArr);
-    fs.writeFileSync(`${basePath}/build/json/${collectionName}.json`, data);
-    console.log(`${collectionName}.json saved at ${basePath}/build/json`);
-  }
-
-  // Upload data to Moralis database
-  if (upload) {
-    for (let i = 0; i < nftArr.length; i++) {
-      nftArr[i].Rank = i + 1;
-      const newClass = Moralis.Object.extend(collectionName);
-      const newObject = new newClass();
-
-      newObject.set("attributes", nftArr[i].Attributes);
-      newObject.set("rarity", nftArr[i].Rarity);
-      newObject.set("tokenId", nftArr[i].token_id);
-      newObject.set("rank", nftArr[i].Rank);
-      newObject.set("image", nftArr[i].image);
-
-      await newObject.save();
-      if (logUpload) {
-        console.log(i);
-      }
-    }
-    console.log(`Uploading of ${collectionName} to Moralis database finished`);
-  }
+  let data = JSON.stringify(nftArr);
+  fs.writeFileSync(`${basePath}/build/json/${fileName}.json`, data);
+  console.log(`${fileName}.json saved at ${basePath}/build/json`);
   return true;
 };
 
 module.exports = {
   buildSetup,
-  generateRarity,
+  generateRarity
 };

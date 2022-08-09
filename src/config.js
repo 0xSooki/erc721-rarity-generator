@@ -1,26 +1,14 @@
 // Change this to the desired contract address you would like to get rarity for
-const contractAddress = "CONTRACT_ADDRESS";
+const contractAddress = '0xb452Ff31B35Dee74f2FdfD5194B91Af1BaD07b91';
 
-// Change this to the name of the collection
-const collectionName = "COLLECTION_NAME";
-
-// If you want to upload your data to the moralis cloud change this to true
-const upload = false;
-
-// Logging the upload of data to the Moralis database
-const logUpload = true;
+// Change this to the name you would like to name the output file
+const fileName = 'FILE_NAME';
 
 // Logging the retrieved pages of the collection
 const logPages = true;
 
-// If you would like to save the data in JSON format change this to true
-const json = true;
-
 module.exports = {
   contractAddress,
-  collectionName,
-  upload,
-  json,
-  logUpload,
-  logPages,
+  fileName,
+  logPages
 };
