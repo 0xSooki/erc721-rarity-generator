@@ -2,14 +2,11 @@
     <img src="https://user-images.githubusercontent.com/63467479/190611518-b60d57af-711b-4b8b-9de5-eb2d51ddcb59.png" alt="Project Banner">
 </a>
 
+# Welcome to Hacktoberfest
 
-# Welcome to Hacktoberfest !!!
+Hello coders! We welcome everyone to join our quest and contribute in this web3 project. Also make sure to check out the [README](https://github.com/0xSooki/nft-rarity-generator#readme) to get a better understanding of this repo.
 
-Hello coders! We welcome everyone to join our quest and contribute in this web3 project. Also make sure to check out the [README](https://github.com/0xSooki/nft-rarity-generator#readme) to get a better understanding of this repo. 
-
-
-### Also, get yourself free goodies after a successful pull/merge request!
-
+### Also, get yourself free goodies after a successful pull/merge request
 
 # What is Hacktoberfest?
 
@@ -17,30 +14,27 @@ Hacktoberfest is for everyone. It is a month-long celebration from October 1st -
 
 [https://hacktoberfest.digitalocean.com/](https://hacktoberfest.digitalocean.com/)
 
-## Steps to follow :scroll:
+## Steps to follow :scroll
 
-### 1. Register for the Hacktoberfest :
+### 1. Register for the Hacktoberfest
 
-https://hacktoberfest.digitalocean.com/
+<https://hacktoberfest.digitalocean.com/>
 
-### 2. Give this Project a Star :
+### 2. Give this Project a Star
 
 If you liked working on this repo, please share this repo as much
 as you can and star this repo to help as many people in open-source as you can.
 
-
-### 3. Fork it :
+### 3. Fork it
 
 You can get your own fork/copy of this project [NFT rarity generator](https://github.com/0xSooki/nft-rarity-generator) by using the <kbd><b>Fork</b></kbd></a> button
 
-
-### 4. Ready, Steady, Go... :
+### 4. Ready, Steady, Go...
 
 Once you have completed these steps, you are ready to start contributing
 by checking our [issues tab](https://github.com/0xSooki/nft-rarity-generator/issues) and creating [pull requests](https://github.com/0xSooki/nft-rarity-generator/pulls).
 
-
-# Steps to make changes and contribute using GIT!
+# Steps to make changes and contribute using GIT
 
 To make your own local copy of the repository you would like to contribute to, let’s first open up a terminal window.
 
@@ -48,7 +42,7 @@ We’ll use the `git clone` command along with the URL that points to your fork 
 
 This URL will be similar to the URL above, except now it will end with `.git` . The URL will look like this:
 
-https://github.com/0xSooki/nft-rarity-generator.git
+<https://github.com/0xSooki/nft-rarity-generator.git>
 
 You can alternatively copy the URL by using the green "Clone or download" button from your repository page that you just forked from the original repository page. Once you click the button, you’ll be able to copy the URL by clicking the binder button next to the URL:
 
@@ -167,4 +161,4 @@ You should navigate to your forked repository, and press the “New pull request
 
 Don't forget to star this repository ✨
 
-# Hurray! You just got closer to complete your hacktoberfest challenge.
+# Hurray! You just got closer to complete your hacktoberfest challenge
