@@ -2,21 +2,22 @@ const fs = require('fs');
 const { fileName: defaultFileName } = require('../config.js');
 
 const basePath = process.cwd();
-const buildDir = `${basePath}/build`;
+const BUILD_DIR = `${basePath}/build`;
+const JSON_DIR = `${BUILD_DIR}/json`;
 
 const buildSetupFolder = () => {
-  if (fs.existsSync(buildDir)) {
-    fs.rmdirSync(buildDir, { recursive: true });
+  if (fs.existsSync(BUILD_DIR)) {
+    fs.rmdirSync(BUILD_DIR, { recursive: true });
   }
-  fs.mkdirSync(buildDir);
-  fs.mkdirSync(`${buildDir}/json`);
+  fs.mkdirSync(BUILD_DIR);
+  fs.mkdirSync(JSON_DIR);
 };
 
 const saveData = (data, fileName = defaultFileName) => {
   const stringifiedData = JSON.stringify(data);
 
-  fs.writeFileSync(`${buildDir}/json/${fileName}.json`, stringifiedData);
-  console.info(`${fileName}.json saved at ${basePath}/build/json`);
+  fs.writeFileSync(`${JSON_DIR}/${fileName}.json`, stringifiedData);
+  console.info(`${fileName}.json saved at ${JSON_DIR}`);
   return true;
 };
 
