@@ -4,6 +4,7 @@ const fs = require('fs');
 const { contractAddress, fileName, logPages } = require(`${basePath}/src/config.js`);
 const buildDir = `${basePath}/build`;
 const { Network, Alchemy } = require('alchemy-sdk');
+const { addNFT } = require('./mongo');
 
 const settings = {
   apiKey: process.env.ALCHEMY_API_KEY,
@@ -135,12 +136,14 @@ const generateRarity = async () => {
         console.log(err);
       }
     }
-    nftArr.push({
-      Attributes: current,
-      Rarity: Math.round(100 * totalRarity) / 100,
+    const nft = {
       token_id: parseInt(allNfts[i].tokenId),
-      image: allNfts[i].rawMetadata.image
-    });
+      image: allNfts[i].rawMetadata.image,
+      rarity: Math.round(100 * totalRarity) / 100,
+      attributes: current
+    };
+    nftArr.push(nft);
+    addNFT(nft);
   }
 
   nftArr.sort((a, b) => b.Rarity - a.Rarity);
@@ -149,6 +152,7 @@ const generateRarity = async () => {
   let data = JSON.stringify(nftArr);
   fs.writeFileSync(`${basePath}/build/json/${fileName}.json`, data);
   console.log(`${fileName}.json saved at ${basePath}/build/json`);
+  console.log('Completed adding NFTs to DB');
   return true;
 };
 
