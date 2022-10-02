@@ -1,42 +1,19 @@
-const basePath = process.cwd();
 require('dotenv').config();
-const fs = require('fs');
-const { contractAddress, fileName, logPages } = require(`${basePath}/src/config.js`);
-const buildDir = `${basePath}/build`;
-const { Network, Alchemy } = require('alchemy-sdk');
+
 const { addNFT } = require('./mongo');
 
-const settings = {
-  apiKey: process.env.ALCHEMY_API_KEY,
-  network: Network.ETH_MAINNET
-};
-
-const alchemy = new Alchemy(settings);
+const { alchemyClient } = require('./alchemy');
+const { contractAddress, logPages } = require('./config.js');
+const { saveData } = require('./persist');
+const { resolveLink, roundToHundredth } = require('./utils');
 
 const getNFTsForCollectionOnce = async (pageKey) => {
-  const response = await alchemy.nft.getNftsForContract(contractAddress, {
+  const response = await alchemyClient.nft.getNftsForContract(contractAddress, {
     pageKey: pageKey,
     withMetadata: true
   });
   return response;
 };
-
-const resolveLink = (url) => {
-  if (!url || !url.includes('ipfs://')) return url;
-  return url.replace('ipfs://', 'https://gateway.ipfs.io/ipfs/');
-};
-
-const buildSetup = () => {
-  if (fs.existsSync(buildDir)) {
-    fs.rmdirSync(buildDir, { recursive: true });
-  }
-  fs.mkdirSync(buildDir);
-  fs.mkdirSync(`${buildDir}/json`);
-};
-
-function roundToHundredth(num) {
-  return Math.round(100 * num) / 100;
-}
 
 const generateRarity = async () => {
   let metadata = [];
@@ -46,7 +23,7 @@ const generateRarity = async () => {
   while (nextPage || nextPage === '') {
     const { nfts, pageKey } = await getNFTsForCollectionOnce(nextPage);
     if (logPages) {
-      console.log(nfts);
+      console.info(nfts);
     }
     for (const token of nfts) {
       if (token.rawMetadata.attributes) {
@@ -149,14 +126,9 @@ const generateRarity = async () => {
   nftArr.sort((a, b) => b.Rarity - a.Rarity);
 
   // Save data as JSON file
-  let data = JSON.stringify(nftArr);
-  fs.writeFileSync(`${basePath}/build/json/${fileName}.json`, data);
-  console.log(`${fileName}.json saved at ${basePath}/build/json`);
-  console.log('Completed adding NFTs to DB');
-  return true;
+  return saveData(nftArr);
 };
 
 module.exports = {
-  buildSetup,
   generateRarity
 };
