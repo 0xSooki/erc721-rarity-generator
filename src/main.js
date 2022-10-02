@@ -6,6 +6,7 @@ const { saveData } = require('./persist');
 const {
   calculateTotalRaritybase,
   generateTally,
+  getNftImage,
   resolveLink,
   roundToHundredth
 } = require('./utils');
@@ -57,20 +58,12 @@ const generateRarity = async () => {
     if (currentNft?.metadata) {
       currentNft.image = resolveLink(currentNft.metadata?.image);
     } else if (currentNft.token_uri) {
-      try {
-        await fetch(currentNft.token_uri)
-          .then((res) => res.json())
-          .then((data) => {
-            allNfts[i].image = resolveLink(data.image);
-          });
-      } catch (err) {
-        console.log(err);
-      }
+      allNfts[i].image = await getNftImage(currentNft.token_uri);
     }
 
     const nft = {
-      Attributes: currentMeta,
-      Rarity: Math.round(100 * totalRarity) / 100,
+      attributes: currentMeta,
+      rarity: Math.round(100 * totalRarity) / 100,
       token_id: parseInt(currentNft.tokenId),
       image: currentNft.rawMetadata.image
     };

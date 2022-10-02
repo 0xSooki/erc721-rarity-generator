@@ -63,10 +63,21 @@ const calculateTotalRaritybase = (meta, tally, totalMetadata) => {
   }, 0);
 };
 
+const getNftImage = async (tokenUri) => {
+  try {
+    return await fetch(tokenUri)
+      .then((res) => res.json())
+      .then((data) => resolveLink(data.image));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   calculateTotalRaritybase,
   extractTraitsAndValues,
   generateTally,
+  getNftImage,
   resolveLink,
   roundToHundredth
 };
