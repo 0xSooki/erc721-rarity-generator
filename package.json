@@ -13,7 +13,8 @@
     "@alch/alchemy-sdk": "^1.2.0",
     "alchemy-sdk": "^2.0.1",
     "axios": "^0.27.2",
-    "dotenv": "^16.0.1"
+    "dotenv": "^16.0.1",
+    "mongoose": "^6.6.3"
   },
   "devDependencies": {
     "eslint": "^8.20.0",

@@ -50,9 +50,10 @@ Alternatively you can run this command if you have yarn installed.
 
 # Usage
 
-Firstly set up your `.env` by removing the `.example` part of the `.env.example` file in the root directory and provide your [Alchemy](https://www.alchemy.com/) **ALCHEMY_API_KEY**
+Firstly set up your `.env` by removing the `.example` part of the `.env.example` file in the root directory and provide your [Alchemy](https://www.alchemy.com/) **ALCHEMY_API_KEY** and [MongoDB](https://cloud.mongodb.com/) **MONGO_URL**
 
     ALCHEMY_API_KEY="YOUR_ALCHEMY_API_KEY"
+    MONGO_URL="YOUR_MONGO_URL"
 
 In the `config.js`you can set the **contractAddress**, **fileName**, **logPages** features.
 
