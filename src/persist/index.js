@@ -7,7 +7,7 @@ const JSON_DIR = `${BUILD_DIR}/json`;
 
 const buildSetupFolder = () => {
   if (fs.existsSync(BUILD_DIR)) {
-    fs.rmdirSync(BUILD_DIR, { recursive: true });
+    fs.rmSync(BUILD_DIR, { recursive: true });
   }
   fs.mkdirSync(BUILD_DIR);
   fs.mkdirSync(JSON_DIR);
