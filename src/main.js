@@ -5,7 +5,7 @@ const { addNFT } = require('./mongo');
 const { alchemyClient } = require('./alchemy');
 const { contractAddress, logPages } = require('./config.js');
 const { saveData } = require('./persist');
-const { resolveLink, roundToHundredth } = require('./utils');
+const { generateTally, resolveLink, roundToHundredth } = require('./utils');
 
 const getNFTsForCollectionOnce = async (pageKey) => {
   const response = await alchemyClient.nft.getNftsForContract(contractAddress, {
@@ -15,16 +15,18 @@ const getNFTsForCollectionOnce = async (pageKey) => {
   return response;
 };
 
-const generateRarity = async () => {
-  let metadata = [];
-  let allNfts = [];
+const getNftsAndMetaData = async () => {
+  const metadata = [];
+  const allNfts = [];
 
   let nextPage = '';
   while (nextPage || nextPage === '') {
     const { nfts, pageKey } = await getNFTsForCollectionOnce(nextPage);
+
     if (logPages) {
-      console.info(nfts);
+      console.log(nfts);
     }
+
     for (const token of nfts) {
       if (token.rawMetadata.attributes) {
         metadata.push(token.rawMetadata.attributes);
@@ -33,69 +35,56 @@ const generateRarity = async () => {
     }
     nextPage = pageKey;
   }
-  let total = metadata.length;
-  let tally = { TraitCount: {} };
-  for (let i = 0; i < metadata.length; i++) {
-    if (metadata[i]) {
-      let traits = metadata[i].map((e) => e.trait_type);
-      let values = metadata[i].map((e) => e.value);
-      let numOfTraits = traits.length;
 
-      if (tally.TraitCount[numOfTraits]) {
-        tally.TraitCount[numOfTraits]++;
-      } else {
-        tally.TraitCount[numOfTraits] = 1;
-      }
-      for (let j = 0; j < traits.length; j++) {
-        let current = traits[j];
+  return [metadata, allNfts];
+};
 
-        if (tally[current]) {
-          tally[current].occurences++;
-        } else {
-          tally[current] = { occurences: 1 };
-        }
+const generateRarity = async () => {
+  const [metadataList, allNfts] = await getNftsAndMetaData();
 
-        let currentValue = values[j];
-        if (tally[current][currentValue]) {
-          tally[current][currentValue]++;
-        } else {
-          tally[current][currentValue] = 1;
-        }
-      }
-    }
-  }
+  const totalMetadata = metadataList.length;
+
+  const tally = generateTally(metadataList);
 
   const collectionAttributes = Object.keys(tally);
-  let nftArr = [];
+  const nftArr = [];
 
-  for (let i = 0; i < metadata.length; i++) {
-    let current = metadata[i];
+  for (let i = 0; i < metadataList.length; i++) {
+    const currentMeta = [...metadataList[i]];
     let totalRarity = 0;
 
-    for (let j = 0; j < current.length; j++) {
-      let rarityScore = 1 / (tally[current[j].trait_type][current[j].value] / total);
-      current[j].rarityScore = roundToHundredth(rarityScore);
+    for (let j = 0; j < currentMeta.length; j++) {
+      const { trait_type, value } = currentMeta[j];
+      const rarityScore = 1 / (tally[trait_type][value] / totalMetadata);
+
+      currentMeta[j].rarityScore = roundToHundredth(rarityScore);
       totalRarity += rarityScore;
     }
 
-    let rarityScoreNumTraits = 8 * (1 / (tally.TraitCount[Object.keys(current).length] / total));
-    current.push({
+    const rarityScoreNumTraits =
+      8 * (1 / (tally.TraitCount[Object.keys(currentMeta).length] / totalMetadata));
+
+    currentMeta.push({
       trait_type: 'TraitCount',
-      value: Object.keys(current).length,
+      value: Object.keys(currentMeta).length,
       rarityScore: roundToHundredth(rarityScoreNumTraits)
     });
+
     totalRarity += rarityScoreNumTraits;
 
-    if (current.length < collectionAttributes.length) {
-      let attributes = current.map((e) => e.trait_type);
-      let absent = collectionAttributes.filter((e) => !attributes.includes(e));
+    if (currentMeta.length < collectionAttributes.length) {
+      const attributes = currentMeta.map((e) => e.trait_type);
+      const absent = collectionAttributes.filter((e) => !attributes.includes(e));
+
       absent.forEach((type) => {
-        let rarityScoreNull = 1 / ((total - tally[type].occurences) / total);
-        current.push({
+        const rarityScoreNull = 1 / ((totalMetadata - tally[type].occurences) / totalMetadata);
+
+        currentMeta.push({
           trait_type: type,
           value: null,
           rarityScore: roundToHundredth(rarityScoreNull)
         });
+
         totalRarity += rarityScoreNull;
       });
     }
@@ -113,19 +102,21 @@ const generateRarity = async () => {
         console.log(err);
       }
     }
+
     const nft = {
+      Attributes: currentMeta,
+      Rarity: Math.round(100 * totalRarity) / 100,
       token_id: parseInt(allNfts[i].tokenId),
       image: allNfts[i].rawMetadata.image,
-      rarity: Math.round(100 * totalRarity) / 100,
       attributes: current
     };
+
     nftArr.push(nft);
     addNFT(nft);
   }
 
   nftArr.sort((a, b) => b.Rarity - a.Rarity);
 
-  // Save data as JSON file
   return saveData(nftArr);
 };
 
