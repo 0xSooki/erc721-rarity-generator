@@ -3,7 +3,12 @@ require('dotenv').config();
 const { getNftsAndMetaData } = require('./alchemy');
 const { addNFT } = require('./mongo');
 const { saveData } = require('./persist');
-const { generateTally, resolveLink, roundToHundredth } = require('./utils');
+const {
+  calculateTotalRaritybase,
+  generateTally,
+  resolveLink,
+  roundToHundredth
+} = require('./utils');
 
 const generateRarity = async () => {
   const [metadataList, allNfts] = await getNftsAndMetaData();
@@ -17,15 +22,8 @@ const generateRarity = async () => {
 
   for (let i = 0; i < metadataList.length; i++) {
     const currentMeta = [...metadataList[i]];
-    let totalRarity = 0;
 
-    for (let j = 0; j < currentMeta.length; j++) {
-      const { trait_type, value } = currentMeta[j];
-      const rarityScore = 1 / (tally[trait_type][value] / totalMetadata);
-
-      currentMeta[j].rarityScore = roundToHundredth(rarityScore);
-      totalRarity += rarityScore;
-    }
+    let totalRarity = calculateTotalRaritybase(currentMeta, tally, totalMetadata);
 
     const rarityScoreNumTraits =
       8 * (1 / (tally.TraitCount[Object.keys(currentMeta).length] / totalMetadata));
@@ -55,11 +53,12 @@ const generateRarity = async () => {
       });
     }
 
-    if (allNfts[i]?.metadata) {
-      allNfts[i].image = resolveLink(allNfts[i].metadata?.image);
-    } else if (allNfts[i].token_uri) {
+    const currentNft = allNfts[i];
+    if (currentNft?.metadata) {
+      currentNft.image = resolveLink(currentNft.metadata?.image);
+    } else if (currentNft.token_uri) {
       try {
-        await fetch(allNfts[i].token_uri)
+        await fetch(currentNft.token_uri)
           .then((res) => res.json())
           .then((data) => {
             allNfts[i].image = resolveLink(data.image);
@@ -72,9 +71,8 @@ const generateRarity = async () => {
     const nft = {
       Attributes: currentMeta,
       Rarity: Math.round(100 * totalRarity) / 100,
-      token_id: parseInt(allNfts[i].tokenId),
-      image: allNfts[i].rawMetadata.image,
-      attributes: current
+      token_id: parseInt(currentNft.tokenId),
+      image: currentNft.rawMetadata.image
     };
 
     nftArr.push(nft);

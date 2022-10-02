@@ -51,4 +51,22 @@ const generateTally = (metadataList) => {
   );
 };
 
-module.exports = { extractTraitsAndValues, generateTally, resolveLink, roundToHundredth };
+// This will calculate the base rarity score
+// and mutate the 'rarityScore' on the passed in meta list reference
+const calculateTotalRaritybase = (meta, tally, totalMetadata) => {
+  return meta.reduce((totalRarity, currentMeta, index) => {
+    const { trait_type, value } = currentMeta;
+    const rarityScore = 1 / (tally[trait_type][value] / totalMetadata);
+
+    meta[index].rarityScore = roundToHundredth(rarityScore);
+    return totalRarity + rarityScore;
+  }, 0);
+};
+
+module.exports = {
+  calculateTotalRaritybase,
+  extractTraitsAndValues,
+  generateTally,
+  resolveLink,
+  roundToHundredth
+};
