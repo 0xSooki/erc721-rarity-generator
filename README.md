@@ -100,7 +100,7 @@ Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
 
-2. Create your Feature Branch (`git checkout -b feature-name`)
+2. Create your Feature Branch (`git checkout -b feature-name develop`)
 
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 
