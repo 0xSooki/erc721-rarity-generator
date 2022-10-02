@@ -10,7 +10,7 @@ assignees: ''
 
 Please answer the following questions for yourself before submitting an issue.
 
-- [ ] This is bug in the application 🐛
+- [ ] This is a bug in the application 🐛
 - [ ] I am running the latest version
 - [ ] I checked the documentation and found no answer
 - [ ] I checked to make sure that this issue has not already been filed
@@ -21,20 +21,20 @@ Please answer the following questions for yourself before submitting an issue.
 A clear detailed description of what the bug is.
 
 **To Reproduce** \
-Steps to reproduce the behavior:
+Steps to reproduce the behaviour:
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
-4. See error
+4. See an error
 
-**Expected behavior** \
+**Expected behaviour** \
 A clear and concise description of what you expected to happen.
 
 **Current behaviour** \
-A clear and consise description of what is happening. If possible, give reasoning behind difference in current behaviour and expected behaviour
+A clear and concise description of what is happening. If possible, give the reasoning behind the difference in current behaviour and expected one.
 
 **Possible solutions** (Optional) \
-Give ideas for solving the problem, provide relevant links to additional packages you are mentioning
+Give ideas for solving the problem, and provide relevant links to additional packages you are mentioning
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
