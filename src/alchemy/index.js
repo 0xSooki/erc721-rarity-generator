@@ -1,4 +1,5 @@
 const { Network, Alchemy } = require('alchemy-sdk');
+const { contractAddress, logPages } = require('../config.js');
 
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 
@@ -13,4 +14,36 @@ const settings = {
 
 const alchemyClient = new Alchemy(settings);
 
-module.exports = { alchemyClient };
+const getNFTsForCollectionOnce = async (pageKey) => {
+  const response = await alchemyClient.nft.getNftsForContract(contractAddress, {
+    pageKey: pageKey,
+    withMetadata: true
+  });
+  return response;
+};
+
+const getNftsAndMetaData = async () => {
+  const metadata = [];
+  const allNfts = [];
+
+  let nextPage = '';
+  while (nextPage || nextPage === '') {
+    const { nfts, pageKey } = await getNFTsForCollectionOnce(nextPage);
+
+    if (logPages) {
+      console.log(nfts);
+    }
+
+    for (const token of nfts) {
+      if (token.rawMetadata.attributes) {
+        metadata.push(token.rawMetadata.attributes);
+        allNfts.push(token);
+      }
+    }
+    nextPage = pageKey;
+  }
+
+  return [metadata, allNfts];
+};
+
+module.exports = { getNftsAndMetaData };

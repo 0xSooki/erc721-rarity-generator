@@ -1,43 +1,9 @@
 require('dotenv').config();
 
+const { getNftsAndMetaData } = require('./alchemy');
 const { addNFT } = require('./mongo');
-
-const { alchemyClient } = require('./alchemy');
-const { contractAddress, logPages } = require('./config.js');
 const { saveData } = require('./persist');
 const { generateTally, resolveLink, roundToHundredth } = require('./utils');
-
-const getNFTsForCollectionOnce = async (pageKey) => {
-  const response = await alchemyClient.nft.getNftsForContract(contractAddress, {
-    pageKey: pageKey,
-    withMetadata: true
-  });
-  return response;
-};
-
-const getNftsAndMetaData = async () => {
-  const metadata = [];
-  const allNfts = [];
-
-  let nextPage = '';
-  while (nextPage || nextPage === '') {
-    const { nfts, pageKey } = await getNFTsForCollectionOnce(nextPage);
-
-    if (logPages) {
-      console.log(nfts);
-    }
-
-    for (const token of nfts) {
-      if (token.rawMetadata.attributes) {
-        metadata.push(token.rawMetadata.attributes);
-        allNfts.push(token);
-      }
-    }
-    nextPage = pageKey;
-  }
-
-  return [metadata, allNfts];
-};
 
 const generateRarity = async () => {
   const [metadataList, allNfts] = await getNftsAndMetaData();
