@@ -1,8 +1,5 @@
-require('dotenv').config();
-
 const { getNftsAndMetaData } = require('./alchemy');
-const { addNFT } = require('./mongo');
-const { saveData } = require('./persist');
+const { addMultipleNFTs, saveDataToJSON } = require('./persist');
 const {
   calculateTotalRaritybase,
   generateTally,
@@ -12,6 +9,7 @@ const {
 } = require('./utils');
 
 const generateRarity = async () => {
+  console.log('Generating NFT Rarity');
   const [metadataList, allNfts] = await getNftsAndMetaData();
 
   const totalMetadata = metadataList.length;
@@ -69,12 +67,14 @@ const generateRarity = async () => {
     };
 
     nftArr.push(nft);
-    addNFT(nft);
   }
 
   nftArr.sort((a, b) => b.Rarity - a.Rarity);
 
-  return saveData(nftArr);
+  // Save data into the DB
+  await addMultipleNFTs(nftArr);
+  // Save data into a JSON file locally
+  return saveDataToJSON(nftArr);
 };
 
 module.exports = {

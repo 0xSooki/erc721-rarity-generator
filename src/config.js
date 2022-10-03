@@ -5,7 +5,7 @@ const contractAddress = '0xb452Ff31B35Dee74f2FdfD5194B91Af1BaD07b91';
 const fileName = 'FILE_NAME';
 
 // Logging the retrieved pages of the collection
-const logPages = true;
+const logPages = false;
 
 module.exports = {
   contractAddress,
