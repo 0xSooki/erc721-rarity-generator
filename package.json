@@ -14,7 +14,8 @@
     "alchemy-sdk": "^2.1.0",
     "axios": "^0.27.2",
     "dotenv": "^16.0.3",
-    "mongoose": "^6.6.4"
+    "mongoose": "^6.6.4",
+    "node-fetch": "^3.2.10"
   },
   "devDependencies": {
     "eslint": "^8.24.0",
