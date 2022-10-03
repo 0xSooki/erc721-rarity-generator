@@ -1,7 +1,9 @@
 const basePath = process.cwd();
-const { generateRarity, buildSetup } = require(`${basePath}/src/main.js`);
+
+const { buildSetupFolder } = require(`${basePath}/src/persist`);
+const { generateRarity } = require(`${basePath}/src/main.js`);
 
 (() => {
-  buildSetup();
+  buildSetupFolder();
   generateRarity();
 })();
