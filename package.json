@@ -11,18 +11,18 @@
   "license": "ISC",
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
-    "alchemy-sdk": "^2.0.1",
+    "alchemy-sdk": "^2.1.0",
     "axios": "^0.27.2",
-    "dotenv": "^16.0.1",
-    "mongoose": "^6.6.3"
+    "dotenv": "^16.0.3",
+    "mongoose": "^6.6.4"
   },
   "devDependencies": {
-    "eslint": "^8.20.0",
+    "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1"
   },
   "engines": {
-    "node": ">=16.16.0"
+    "node": ">=17.0.0"
   }
 }
