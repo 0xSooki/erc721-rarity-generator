@@ -1,6 +1,10 @@
 const cliSpinners = require('cli-spinners');
-const fetch = require('node-fetch');
 const { stdout } = require('process');
+
+// The project doesn't support modular imports and this version of
+// node-fetch is not supporting commonjs anymore hence we need to
+// perform dynamic importing
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const resolveLink = (url) => {
   if (!url || !url.includes('ipfs://')) return url;
