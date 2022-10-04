@@ -72,8 +72,9 @@ const getNftImage = async (tokenUri) => {
     return await fetch(tokenUri)
       .then((res) => res.json())
       .then((data) => resolveLink(data.image));
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    stdout.write(`❗ Something went wrong: ${error} ❗`);
+    throw new Error(error);
   }
 };
 
