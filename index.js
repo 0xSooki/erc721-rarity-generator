@@ -1,9 +1,11 @@
-const basePath = process.cwd();
+require('dotenv').config();
 
-const { buildSetupFolder } = require(`${basePath}/src/persist`);
-const { generateRarity } = require(`${basePath}/src/main.js`);
+const { buildSetupFolder, connectToDatabase } = require('./src/persist');
+const { generateRarity } = require('./src/main');
 
 (() => {
-  buildSetupFolder();
-  generateRarity();
+  connectToDatabase().then(() => {
+    buildSetupFolder();
+    generateRarity();
+  });
 })();
