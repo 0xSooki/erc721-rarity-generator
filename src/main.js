@@ -2,14 +2,21 @@ const { getNftsAndMetaData } = require('./alchemy');
 const { addMultipleNFTs, saveDataToJSON } = require('./persist');
 const {
   calculateTotalRaritybase,
+  createSpinner,
   generateTally,
   getNftImage,
   resolveLink,
   roundToHundredth
 } = require('./utils');
+const { stdout } = require('process');
+
+const RarityGeneratorSpinner = createSpinner('Rarity generator');
 
 const generateRarity = async () => {
-  console.log('Generating NFT Rarity');
+  stdout.write('\n');
+  // Start the spinner
+  RarityGeneratorSpinner.start('👾 Generating NFT Rarity ');
+
   const [metadataList, allNfts] = await getNftsAndMetaData();
 
   const totalMetadata = metadataList.length;
@@ -70,6 +77,9 @@ const generateRarity = async () => {
   }
 
   nftArr.sort((a, b) => b.Rarity - a.Rarity);
+
+  // Stop the spinner
+  RarityGeneratorSpinner.stop();
 
   // Save data into the DB
   await addMultipleNFTs(nftArr);
