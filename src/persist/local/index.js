@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { fileName: defaultFileName } = require('../../config.js');
+const { FILE_NAME } = require('../../config.js');
 
 const basePath = process.cwd();
 const BUILD_DIR = `${basePath}/build`;
@@ -14,8 +14,8 @@ const buildSetupFolder = () => {
   fs.mkdirSync(JSON_DIR);
 };
 
-const saveDataToJSON = (data, fileName = defaultFileName) => {
-  const stringifiedData = JSON.stringify(data);
+const saveDataToJSON = (data, fileName = FILE_NAME) => {
+  const stringifiedData = JSON.stringify(data, null, 2);
 
   fs.writeFileSync(`${JSON_DIR}/${fileName}.json`, stringifiedData);
   console.info(`${fileName}.json saved at ${JSON_DIR}`);

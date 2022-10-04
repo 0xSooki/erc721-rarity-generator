@@ -1,10 +1,5 @@
 const mongoose = require('mongoose');
-
-const MONGO_DB_URL = process.env.MONGO_DB_URL;
-
-if (!MONGO_DB_URL) {
-  throw new Error(`${MONGO_DB_URL} is required!`);
-}
+const { MONGO_DB_URL } = require('../../config');
 
 // Setup listeners
 mongoose.connection.once('open', () => {
