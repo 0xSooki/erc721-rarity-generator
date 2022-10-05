@@ -2,6 +2,7 @@ const { getNftsAndMetaData } = require('./alchemy');
 const { addMultipleNFTs, saveDataToJSON } = require('./persist');
 const {
   calculateTotalRaritybase,
+  createErrorHandler,
   createSpinner,
   generateTally,
   getNftImage,
@@ -9,8 +10,10 @@ const {
   roundToHundredth
 } = require('./utils');
 const { stdout } = require('process');
+const { NftModel } = require('./persist/db/schemas');
 
 const RarityGeneratorSpinner = createSpinner('Rarity generator');
+const RarityGeneratorErrors = createErrorHandler();
 
 const generateRarity = async () => {
   stdout.write('\n');
@@ -73,13 +76,33 @@ const generateRarity = async () => {
       image: currentNft.rawMetadata.image
     };
 
-    nftArr.push(nft);
+    // Validate data
+    const validationError = new NftModel(nft).validateSync();
+
+    // If there is an error we save the error and move to the next datum
+    if (validationError) {
+      RarityGeneratorErrors.addError({
+        keys: Object.keys(nft),
+        tokenId: nft.token_id,
+        validationError
+      });
+    } else {
+      nftArr.push(nft);
+    }
   }
 
   nftArr.sort((a, b) => b.rarity - a.rarity);
 
   // Stop the spinner
   RarityGeneratorSpinner.stop();
+
+  // Prompt the user about any validation error
+  if (RarityGeneratorErrors.hasError()) {
+    const errorCount = RarityGeneratorErrors.getErrors().length;
+    stdout.write(`\n⚠️  ${errorCount} error(s) occured during data validation. ⚠️\n`);
+  }
+
+  stdout.write(`\n📈 ${nftArr.length}/${allNfts.length} rarity data ready to be saved\n`);
 
   // Save data into the DB
   await addMultipleNFTs(nftArr);
