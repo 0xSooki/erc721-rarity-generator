@@ -76,7 +76,7 @@ const generateRarity = async () => {
     nftArr.push(nft);
   }
 
-  nftArr.sort((a, b) => b.Rarity - a.Rarity);
+  nftArr.sort((a, b) => b.rarity - a.rarity);
 
   // Stop the spinner
   RarityGeneratorSpinner.stop();
