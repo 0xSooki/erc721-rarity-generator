@@ -1,14 +1,21 @@
-// Change this to the desired contract address you would like to get rarity for
-const contractAddress = '0xb452Ff31B35Dee74f2FdfD5194B91Af1BaD07b91';
+require('dotenv').config();
 
-// Change this to the name you would like to name the output file
-const fileName = 'FILE_NAME';
+const CONTRACT_ADDRESS = process.env['CONTRACT_ADDRESS'];
 
-// Logging the retrieved pages of the collection
-const logPages = false;
+if (!CONTRACT_ADDRESS) {
+  throw new Error(`${CONTRACT_ADDRESS} must be defined!`);
+}
+
+const MONGO_DB_URL = process.env.MONGO_DB_URL;
+
+if (!MONGO_DB_URL) {
+  throw new Error(`${MONGO_DB_URL} must be defined!`);
+}
+
+const FILE_NAME = process.env['FILE_NAME'] || 'nft-data';
 
 module.exports = {
-  contractAddress,
-  fileName,
-  logPages
+  CONTRACT_ADDRESS,
+  FILE_NAME,
+  MONGO_DB_URL
 };

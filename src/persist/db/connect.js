@@ -1,34 +1,31 @@
 const mongoose = require('mongoose');
-
-const MONGO_DB_URL = process.env.MONGO_DB_URL;
-
-if (!MONGO_DB_URL) {
-  throw new Error(`${MONGO_DB_URL} is required!`);
-}
+const { stdout } = require('process');
+const { MONGO_DB_URL } = require('../../config');
 
 // Setup listeners
 mongoose.connection.once('open', () => {
-  console.log('MongoDB is open');
+  stdout.write('[2/3] 🌱 MongoDB is open\n');
 
   mongoose.connection.on('connected', () => {
-    console.log('MongoDB is connected');
+    stdout.write(' 🌱 MongoDB is connected\n');
   });
 
   mongoose.connection.on('disconnected', () => {
-    console.error('MongoDB is disconnected');
+    stdout.write('❗ MongoDB is disconnected ❗');
   });
 
   mongoose.connection.on('reconnected', () => {
-    console.log('MongoDB is reconnected');
+    stdout.write(' 🌱 MongoDB is reconnected\n');
   });
 
   mongoose.connection.on('error', (error) => {
-    console.error(`MongoDB error: ${error}`);
+    stdout.write(`❗ MongoDB error: ${error}❗`);
+    throw new Error(error);
   });
 });
 
 const connectToDatabase = () => {
-  console.log('Start Connecting to MongoDB...');
+  stdout.write('[1/3] 🌱 Start Connecting to MongoDB\n');
 
   return mongoose
     .connect(MONGO_DB_URL, {
@@ -37,10 +34,10 @@ const connectToDatabase = () => {
       useUnifiedTopology: true
     })
     .then(() => {
-      console.log('MongoDB is connected');
+      stdout.write('[3/3] 🌱 MongoDB is connected\n');
     })
     .catch((error) => {
-      console.log(`MongoDB connection error: ${error}`);
+      stdout.write(`❗ MongoDB connection error: ${error} ❗\n`);
       throw new Error(error);
     });
 };
