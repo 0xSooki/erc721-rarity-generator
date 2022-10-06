@@ -1,5 +1,5 @@
 const { Network, Alchemy } = require('alchemy-sdk');
-const { CONTRACT_ADDRESS } = require('../config.js');
+const { CONTRACT_ADDRESS } = require('../utils/constants');
 
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 

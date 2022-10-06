@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { stdout } = require('process');
-const { FILE_NAME } = require('../../config.js');
+const { FILE_NAME } = require('../../utils/constants');
 
 const basePath = process.cwd();
 const BUILD_DIR = `${basePath}/build`;

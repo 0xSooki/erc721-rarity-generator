@@ -1,5 +1,8 @@
 require('dotenv').config();
 
+const { createErrorContainer } = require('./errorContainer');
+const { createSpinner } = require('./spinner');
+
 const CONTRACT_ADDRESS = process.env['CONTRACT_ADDRESS'];
 
 if (!CONTRACT_ADDRESS) {
@@ -14,8 +17,13 @@ if (!MONGO_DB_URL) {
 
 const FILE_NAME = process.env['FILE_NAME'] || 'nft-data';
 
+const RarityGeneratorSpinner = createSpinner('Rarity generator');
+const RarityGeneratorErrors = createErrorContainer();
+
 module.exports = {
   CONTRACT_ADDRESS,
   FILE_NAME,
-  MONGO_DB_URL
+  MONGO_DB_URL,
+  RarityGeneratorSpinner,
+  RarityGeneratorErrors
 };

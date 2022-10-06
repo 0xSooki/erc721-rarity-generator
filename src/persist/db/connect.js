@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { stdout } = require('process');
-const { MONGO_DB_URL } = require('../../config');
+const { MONGO_DB_URL } = require('../../utils/constants');
 
 // Setup listeners
 mongoose.connection.once('open', () => {
