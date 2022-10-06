@@ -104,7 +104,9 @@ const generateRarity = async () => {
   // Save data into the DB
   await addMultipleNFTs(nftArr);
   // Save data into a JSON file locally
-  return saveDataToJSON(nftArr);
+  saveDataToJSON(nftArr);
+
+  await generatorPrompt();
 };
 
 module.exports = {
