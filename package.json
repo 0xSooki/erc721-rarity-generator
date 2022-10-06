@@ -12,9 +12,9 @@
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
     "alchemy-sdk": "^2.1.0",
-    "axios": "^0.27.2",
     "cli-spinners": "^2.7.0",
     "dotenv": "^16.0.3",
+    "inquirer": "^9.1.2",
     "mongoose": "^6.6.4",
     "node-fetch": "^3.2.10"
   },
