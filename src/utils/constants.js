@@ -22,7 +22,13 @@ if (!MONGO_DB_URL) {
   throw new Error(`${MONGO_DB_URL} must be defined!`);
 }
 
-export const FILE_NAME = process.env['FILE_NAME'] || 'nft-data';
-
 export const RarityGeneratorSpinner = createSpinner('Rarity generator');
 export const RarityGeneratorErrors = createErrorContainer();
+
+const BASE_PATH = process.cwd();
+export const NFT_DIR = `${BASE_PATH}/nfts`;
+export const NFT_FILE_NAME = 'NFT-Data';
+export const CALCULATIONS_DIR = `${NFT_DIR}/calculations`;
+export const CALCULATIONS_FILE_NAME = process.env['FILE_NAME'] || 'NFT-Calculations';
+export const ERRORS_DIR = `${NFT_DIR}/errors`;
+export const ERROR_FILE_NAME = 'Error';

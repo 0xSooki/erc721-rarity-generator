@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { stdout } from 'node:process';
-import { saveDataToJSON } from '../persist/index.js';
+import { saveErrorJson } from '../persist/index.js';
 import { RarityGeneratorErrors } from './constants.js';
 
 export const generatorPrompt = () => {
@@ -21,9 +21,9 @@ export const generatorPrompt = () => {
         RarityGeneratorErrors.printErrors();
         generatorPrompt();
         break;
-      case 'Save Error':
+      case 'Save Errors':
         if (RarityGeneratorErrors.hasError()) {
-          saveDataToJSON(RarityGeneratorErrors.getErrors(), 'nft-errors');
+          saveErrorJson(RarityGeneratorErrors.getErrors());
         } else {
           RarityGeneratorErrors.printErrors();
         }

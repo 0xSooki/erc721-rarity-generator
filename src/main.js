@@ -1,5 +1,5 @@
 import { getNftsAndMetaData } from './alchemy/index.js';
-import { addMultipleNFTs, saveDataToJSON } from './persist/index.js';
+import { addMultipleNFTs, saveCalculationJson, saveNFTJson } from './persist/index.js';
 import {
   calculateTotalRaritybase,
   generateTally,
@@ -104,7 +104,9 @@ export const generateRarity = async () => {
   // Save data into the DB
   await addMultipleNFTs(nftArr);
   // Save data into a JSON file locally
-  saveDataToJSON(nftArr);
+  saveCalculationJson(nftArr);
+  // Save fetched data to a JSON file locally
+  saveNFTJson(allNfts);
 
   await generatorPrompt();
 };

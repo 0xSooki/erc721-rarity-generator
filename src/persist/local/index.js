@@ -1,11 +1,14 @@
 import fs from 'node:fs';
 import { stdout } from 'node:process';
-import { FILE_NAME } from '../../utils/constants.js';
-
-const BASE_PATH = process.cwd();
-const NFT_DIR = `${BASE_PATH}/nfts`;
-const CALCULATIONS_DIR = `${BASE_PATH}/calculations`;
-const ERRORS_DIR = `${BASE_PATH}/errors`;
+import {
+  CALCULATIONS_DIR,
+  ERRORS_DIR,
+  ERROR_FILE_NAME,
+  CALCULATIONS_FILE_NAME,
+  NFT_DIR,
+  NFT_FILE_NAME
+} from '../../utils/constants.js';
+import { getTimestamp } from '../../utils/index.js';
 
 const REQUIRED_FOLDERS = [
   { name: 'NFT Data folder', path: NFT_DIR },
@@ -31,9 +34,51 @@ export const prepareBaseFolderStructure = () => {
   });
 };
 
-export const saveDataToJSON = (data, path, fileName = FILE_NAME) => {
+const saveDataToJson = (data, path, fileName) => {
   const stringifiedData = JSON.stringify(data, null, 2);
 
   fs.writeFileSync(`${path}/${fileName}.json`, stringifiedData);
   stdout.write(`\n💾 Your data has been saved to ${path}/${fileName}.json\n`);
+};
+
+export const saveErrorJson = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${ERROR_FILE_NAME}-${timestamp}`;
+
+  saveDataToJson(data, ERRORS_DIR, fileName);
+};
+
+export const saveErrorsToZip = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${ERROR_FILE_NAME}-${timestamp}`;
+
+  compressDataTo(data, ERRORS_DIR, fileName);
+};
+
+export const saveNFTsToJson = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${NFT_FILE_NAME}-${timestamp}`;
+
+  saveDataToJson(data, NFT_DIR, fileName);
+};
+
+export const saveNFTsToZip = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${NFT_FILE_NAME}-${timestamp}`;
+
+  compressDataTo(data, NFT_DIR, fileName);
+};
+
+export const saveCalculationsToJson = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${CALCULATIONS_FILE_NAME}-${timestamp}`;
+
+  saveDataToJson(data, CALCULATIONS_DIR, fileName);
+};
+
+export const saveCalculationsToZip = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${CALCULATIONS_FILE_NAME}-${timestamp}`;
+
+  compressDataTo(data, CALCULATIONS_DIR, fileName);
 };
