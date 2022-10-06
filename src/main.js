@@ -2,8 +2,6 @@ const { getNftsAndMetaData } = require('./alchemy');
 const { addMultipleNFTs, saveDataToJSON } = require('./persist');
 const {
   calculateTotalRaritybase,
-  createErrorHandler,
-  createSpinner,
   generateTally,
   getNftImage,
   resolveLink,
@@ -11,9 +9,8 @@ const {
 } = require('./utils');
 const { stdout } = require('process');
 const { NftModel } = require('./persist/db/schemas');
-
-const RarityGeneratorSpinner = createSpinner('Rarity generator');
-const RarityGeneratorErrors = createErrorHandler();
+const { RarityGeneratorSpinner, RarityGeneratorErrors } = require('./utils/constants');
+const { generatorPrompt } = require('./utils/prompts');
 
 const generateRarity = async () => {
   stdout.write('\n');

@@ -1,9 +1,7 @@
-const cliSpinners = require('cli-spinners');
 const { stdout } = require('process');
 
 // The project doesn't support modular imports and this version of
-// node-fetch is not supporting commonjs anymore hence we need to
-// perform dynamic importing
+// node-fetch is not supporting commonjs anymore hence we need to perform dynamic importing
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const resolveLink = (url) => {
@@ -82,108 +80,8 @@ const getNftImage = async (tokenUri) => {
   }
 };
 
-const createSpinner = (id) => {
-  const state = {
-    id,
-    affix: null,
-    currentFrame: 0,
-    spinnerRef: null
-  };
-
-  const start = (affixOpt) => {
-    if (state.spinnerRef === null) {
-      state.spinnerRef = setInterval(() => {
-        const { currentFrame } = state;
-        state.affix = affixOpt ? affixOpt : null;
-
-        stdout.clearLine();
-        stdout.cursorTo(0);
-
-        const text = affixOpt
-          ? `${affixOpt} ${cliSpinners.dots.frames[currentFrame]} `
-          : `${cliSpinners.dots.frames[currentFrame]} `;
-        stdout.write(text);
-
-        state.currentFrame = (currentFrame + 1) % cliSpinners.dots.frames.length;
-      }, cliSpinners.dots.interval);
-    } else {
-      stdout.write(`\nSpinner ${state.id} is already running\n`);
-    }
-  };
-
-  const stop = () => {
-    if (state.spinnerRef) {
-      clearInterval(state.spinnerRef);
-      if (state.affix) {
-        stdout.cursorTo(state.affix.length);
-        stdout.write('  \n');
-      } else {
-        stdout.clearLine();
-        stdout.cursorTo(0);
-      }
-
-      state.currentFrame = 0;
-      state.affix = null;
-    }
-  };
-
-  return Object.freeze({
-    id,
-    start,
-    stop
-  });
-};
-
-const createErrorHandler = () => {
-  const state = {
-    errors: []
-  };
-
-  const printErrors = () => {
-    if (state.errors.length === 0) {
-      return stdout.write('⚠️ No error stored ⚠️ \n');
-    }
-
-    state.errors.forEach(({ keys, tokenId, validationError }) => {
-      stdout.write(`❗ Validation error occured for token #${tokenId} ❗\n`);
-      keys.forEach((key) => {
-        const error = validationError.errors[key]?.message;
-
-        if (error) {
-          stdout.write(`❗ ${error} ❗\n`);
-        }
-      });
-      stdout.write('\n');
-    });
-  };
-
-  const storeErrors = (errors) => {
-    state.errors = errors;
-    return true;
-  };
-
-  const addError = (error) => {
-    state.errors = state.errors.concat(error);
-    return true;
-  };
-
-  const getErrors = () => state.errors;
-
-  const hasError = () => state.errors.length > 0;
-
-  return Object.freeze({
-    addError,
-    getErrors,
-    hasError,
-    printErrors,
-    storeErrors
-  });
-};
-
 module.exports = {
   calculateTotalRaritybase,
-  createErrorHandler,
-  createSpinner,
   extractTraitsAndValues,
   generateTally,
   getNftImage,
