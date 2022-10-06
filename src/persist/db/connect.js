@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const { stdout } = require('process');
-const { MONGO_DB_URL } = require('../../utils/constants');
+import mongoose from 'mongoose';
+import { stdout } from 'node:process';
+import { MONGO_DB_URL } from '../../utils/constants.js';
 
 // Setup listeners
 mongoose.connection.once('open', () => {
@@ -24,7 +24,7 @@ mongoose.connection.once('open', () => {
   });
 });
 
-const connectToDatabase = () => {
+export const connectToDatabase = () => {
   stdout.write('[1/3] 🌱 Start Connecting to MongoDB\n');
 
   return mongoose
@@ -41,5 +41,3 @@ const connectToDatabase = () => {
       throw new Error(error);
     });
 };
-
-module.exports = { connectToDatabase };

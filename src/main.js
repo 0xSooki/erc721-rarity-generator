@@ -1,18 +1,18 @@
-const { getNftsAndMetaData } = require('./alchemy');
-const { addMultipleNFTs, saveDataToJSON } = require('./persist');
-const {
+import { getNftsAndMetaData } from './alchemy/index.js';
+import { addMultipleNFTs, saveDataToJSON } from './persist/index.js';
+import {
   calculateTotalRaritybase,
   generateTally,
   getNftImage,
   resolveLink,
   roundToHundredth
-} = require('./utils');
-const { stdout } = require('process');
-const { NftModel } = require('./persist/db/schemas');
-const { RarityGeneratorSpinner, RarityGeneratorErrors } = require('./utils/constants');
-const { generatorPrompt } = require('./utils/prompts');
+} from './utils/index.js';
+import { stdout } from 'node:process';
+import { NftModel } from './persist/db/schemas.js';
+import { RarityGeneratorSpinner, RarityGeneratorErrors } from './utils/constants.js';
+import { generatorPrompt } from './utils/prompts.js';
 
-const generateRarity = async () => {
+export const generateRarity = async () => {
   stdout.write('\n');
   // Start the spinner
   RarityGeneratorSpinner.start('👾 Generating NFT Rarity ');
@@ -107,8 +107,4 @@ const generateRarity = async () => {
   saveDataToJSON(nftArr);
 
   await generatorPrompt();
-};
-
-module.exports = {
-  generateRarity
 };

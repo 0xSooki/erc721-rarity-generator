@@ -1,7 +1,7 @@
-const cliSpinners = require('cli-spinners');
-const { stdout } = require('process');
+import cliSpinners from 'cli-spinners';
+import { stdout } from 'node:process';
 
-const createSpinner = (id) => {
+export const createSpinner = (id) => {
   const state = {
     id,
     affix: null,
@@ -52,5 +52,3 @@ const createSpinner = (id) => {
     stop
   });
 };
-
-module.exports = { createSpinner };

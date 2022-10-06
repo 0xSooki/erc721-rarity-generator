@@ -1,7 +1,7 @@
-const { stdout } = require('process');
-const { NftModel } = require('./schemas');
+import { stdout } from 'node:process';
+import { NftModel } from './schemas.js';
 
-const addSingletonNFT = (nft) => {
+export const addSingletonNFT = (nft) => {
   stdout.write(`\n👉 Trying to insert NFT #${nft.token_id} into the DB\n`);
 
   return new NftModel(nft)
@@ -12,7 +12,7 @@ const addSingletonNFT = (nft) => {
     .catch((error) => stdout.write(`❗ ${error}❗\n`));
 };
 
-const addMultipleNFTs = (nftList) => {
+export const addMultipleNFTs = (nftList) => {
   if (nftList.length === 0) {
     stdout.write('🔴 Received an empty list of NFTs. Doing nothing...\n');
     return Promise.resolve(undefined);
@@ -26,5 +26,3 @@ const addMultipleNFTs = (nftList) => {
     })
     .catch((error) => stdout.write(`❗ ${error} ❗\n`));
 };
-
-module.exports = { addMultipleNFTs, addSingletonNFT };

@@ -1,14 +1,8 @@
-const { Network, Alchemy } = require('alchemy-sdk');
-const { CONTRACT_ADDRESS } = require('../utils/constants');
-
-const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
-
-if (!ALCHEMY_API_KEY) {
-  throw new Error('ALCHEMY_API_KEY is required!');
-}
+import { Network, Alchemy } from 'alchemy-sdk';
+import { ALCHEMY_API_KEY, CONTRACT_ADDRESS } from '../utils/constants.js';
 
 const settings = {
-  apiKey: process.env.ALCHEMY_API_KEY,
+  apiKey: ALCHEMY_API_KEY,
   network: Network.ETH_MAINNET
 };
 
@@ -23,7 +17,7 @@ const getNFTsForCollectionOnce = async (pageKey) => {
   return response;
 };
 
-const getNftsAndMetaData = async () => {
+export const getNftsAndMetaData = async () => {
   const metadata = [];
   const allNfts = [];
 
@@ -42,5 +36,3 @@ const getNftsAndMetaData = async () => {
 
   return [metadata, allNfts];
 };
-
-module.exports = { getNftsAndMetaData };

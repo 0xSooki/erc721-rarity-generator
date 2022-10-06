@@ -1,6 +1,6 @@
-const { stdout } = require('process');
+import { stdout } from 'node:process';
 
-const createErrorContainer = () => {
+export const createErrorContainer = () => {
   const state = {
     errors: []
   };
@@ -45,5 +45,3 @@ const createErrorContainer = () => {
     storeErrors
   });
 };
-
-module.exports = { createErrorContainer };

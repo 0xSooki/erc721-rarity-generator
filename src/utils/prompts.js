@@ -1,12 +1,9 @@
-const { stdout } = require('process');
-const { saveDataToJSON } = require('../persist');
-const { RarityGeneratorErrors } = require('./constants');
+import inquirer from 'inquirer';
+import { stdout } from 'node:process';
+import { saveDataToJSON } from '../persist/index.js';
+import { RarityGeneratorErrors } from './constants.js';
 
-// The project doesn't support modular imports and this version of
-// inquirer is not supporting commonjs anymore hence we need to perform dynamic importing
-const inquirer = import('inquirer').then(({ default: inquirer }) => inquirer);
-
-const generatorPrompt = async () => {
+export const generatorPrompt = () => {
   const questions = [
     {
       type: 'list',
@@ -16,7 +13,7 @@ const generatorPrompt = async () => {
     }
   ];
 
-  (await inquirer).prompt(questions).then((answers) => {
+  inquirer.prompt(questions).then((answers) => {
     const selected = answers['whatsnext'];
 
     switch (selected) {
@@ -42,5 +39,3 @@ const generatorPrompt = async () => {
     }
   });
 };
-
-module.exports = { generatorPrompt };
