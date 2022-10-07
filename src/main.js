@@ -1,5 +1,4 @@
 import { getNftsAndMetaData } from './alchemy/index.js';
-import { addMultipleNFTs, saveCalculationJson, saveNFTJson } from './persist/index.js';
 import {
   calculateTotalRaritybase,
   generateTally,
@@ -9,7 +8,11 @@ import {
 } from './utils/index.js';
 import { stdout } from 'node:process';
 import { NftModel } from './persist/db/schemas.js';
-import { RarityGeneratorSpinner, RarityGeneratorErrors } from './utils/constants.js';
+import {
+  RarityGeneratorSpinner,
+  RarityGeneratorErrors,
+  RarityGeneratorData
+} from './utils/constants.js';
 import { generatorPrompt } from './utils/prompts.js';
 
 export const generateRarity = async () => {
@@ -101,12 +104,8 @@ export const generateRarity = async () => {
 
   stdout.write(`\n📈 ${nftArr.length}/${allNfts.length} rarity data ready to be saved\n`);
 
-  // Save data into the DB
-  await addMultipleNFTs(nftArr);
-  // Save data into a JSON file locally
-  saveCalculationJson(nftArr);
-  // Save fetched data to a JSON file locally
-  saveNFTJson(allNfts);
+  RarityGeneratorData.storeCalculations(nftArr);
+  RarityGeneratorData.storeNfts(allNfts);
 
   await generatorPrompt();
 };
