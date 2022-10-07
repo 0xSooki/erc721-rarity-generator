@@ -1,5 +1,5 @@
-const { buildSetupFolder, connectToDatabase } = require('./src/persist');
-const { generateRarity } = require('./src/main');
+import { buildSetupFolder, connectToDatabase } from './src/persist/index.js';
+import { generateRarity } from './src/main.js';
 
 (() => {
   connectToDatabase().then(() => {

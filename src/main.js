@@ -1,18 +1,18 @@
-const { getNftsAndMetaData } = require('./alchemy');
-const { addMultipleNFTs, saveDataToJSON } = require('./persist');
-const {
+import { getNftsAndMetaData } from './alchemy/index.js';
+import { addMultipleNFTs, saveDataToJSON } from './persist/index.js';
+import {
   calculateTotalRaritybase,
-  createSpinner,
   generateTally,
   getNftImage,
   resolveLink,
   roundToHundredth
-} = require('./utils');
-const { stdout } = require('process');
+} from './utils/index.js';
+import { stdout } from 'node:process';
+import { NftModel } from './persist/db/schemas.js';
+import { RarityGeneratorSpinner, RarityGeneratorErrors } from './utils/constants.js';
+import { generatorPrompt } from './utils/prompts.js';
 
-const RarityGeneratorSpinner = createSpinner('Rarity generator');
-
-const generateRarity = async () => {
+export const generateRarity = async () => {
   stdout.write('\n');
   // Start the spinner
   RarityGeneratorSpinner.start('👾 Generating NFT Rarity ');
@@ -73,7 +73,19 @@ const generateRarity = async () => {
       image: currentNft.rawMetadata.image
     };
 
-    nftArr.push(nft);
+    // Validate data
+    const validationError = new NftModel(nft).validateSync();
+
+    // If there is an error we save the error and move to the next datum
+    if (validationError) {
+      RarityGeneratorErrors.addError({
+        keys: Object.keys(nft),
+        tokenId: nft.token_id,
+        validationError
+      });
+    } else {
+      nftArr.push(nft);
+    }
   }
 
   nftArr.sort((a, b) => b.rarity - a.rarity);
@@ -81,12 +93,18 @@ const generateRarity = async () => {
   // Stop the spinner
   RarityGeneratorSpinner.stop();
 
+  // Prompt the user about any validation error
+  if (RarityGeneratorErrors.hasError()) {
+    const errorCount = RarityGeneratorErrors.getErrors().length;
+    stdout.write(`\n⚠️  ${errorCount} error(s) occured during data validation. ⚠️\n`);
+  }
+
+  stdout.write(`\n📈 ${nftArr.length}/${allNfts.length} rarity data ready to be saved\n`);
+
   // Save data into the DB
   await addMultipleNFTs(nftArr);
   // Save data into a JSON file locally
-  return saveDataToJSON(nftArr);
-};
+  saveDataToJSON(nftArr);
 
-module.exports = {
-  generateRarity
+  await generatorPrompt();
 };
