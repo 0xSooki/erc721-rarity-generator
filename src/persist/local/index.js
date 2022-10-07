@@ -9,6 +9,7 @@ import {
   NFT_FILE_NAME
 } from '../../utils/constants.js';
 import { getTimestamp } from '../../utils/index.js';
+import { compressDataTo } from './compressor.js';
 
 const REQUIRED_FOLDERS = [
   { name: 'NFT Data folder', path: NFT_DIR },
@@ -34,14 +35,14 @@ export const prepareBaseFolderStructure = () => {
   });
 };
 
-const saveDataToJson = (data, path, fileName) => {
+export const saveDataToJson = (data, path, fileName) => {
   const stringifiedData = JSON.stringify(data, null, 2);
 
   fs.writeFileSync(`${path}/${fileName}.json`, stringifiedData);
   stdout.write(`\n💾 Your data has been saved to ${path}/${fileName}.json\n`);
 };
 
-export const saveErrorJson = (data) => {
+export const saveErrorsToJson = (data) => {
   const timestamp = getTimestamp();
   const fileName = `${ERROR_FILE_NAME}-${timestamp}`;
 
@@ -77,6 +78,13 @@ export const saveCalculationsToJson = (data) => {
 };
 
 export const saveCalculationsToZip = (data) => {
+  const timestamp = getTimestamp();
+  const fileName = `${CALCULATIONS_FILE_NAME}-${timestamp}`;
+
+  compressDataTo(data, CALCULATIONS_DIR, fileName);
+};
+
+export const saveCalculationToZip = (data) => {
   const timestamp = getTimestamp();
   const fileName = `${CALCULATIONS_FILE_NAME}-${timestamp}`;
 
