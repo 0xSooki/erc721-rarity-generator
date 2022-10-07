@@ -13,6 +13,7 @@
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
     "alchemy-sdk": "^2.1.0",
+    "archiver": "^5.3.1",
     "cli-spinners": "^2.7.0",
     "dotenv": "^16.0.3",
     "inquirer": "^9.1.2",
