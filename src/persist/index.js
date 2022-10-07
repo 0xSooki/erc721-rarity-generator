@@ -1,5 +1,6 @@
 export { connectToDatabase } from './db/connect.js';
-export { addMultipleNFTs, addSingletonNFT } from './db/actions.js';
+export { insertManyNftsToDatabase, insertSingleNftToDatabase } from './db/actions.js';
+export { compressDataTo } from './local/compressor.js';
 export {
   prepareBaseFolderStructure,
   saveErrorsToJson,
