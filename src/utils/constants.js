@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { createErrorContainer } from './errorContainer.js';
+import { createDataStorage } from './dataStorage.js';
+import { ErrorStorage } from './errorStorage.js';
 import { createSpinner } from './spinner.js';
 
 export const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
@@ -22,8 +23,9 @@ if (!MONGO_DB_URL) {
   throw new Error(`${MONGO_DB_URL} must be defined!`);
 }
 
+export const RarityGeneratorData = createDataStorage();
+export const RarityGeneratorErrors = new ErrorStorage();
 export const RarityGeneratorSpinner = createSpinner('Rarity generator');
-export const RarityGeneratorErrors = createErrorContainer();
 
 const BASE_PATH = process.cwd();
 export const NFT_DIR = `${BASE_PATH}/nfts`;
