@@ -1,7 +1,9 @@
-const basePath = process.cwd();
-const { generateRarity, buildSetup } = require(`${basePath}/src/main.js`);
+import { buildSetupFolder, connectToDatabase } from './src/persist/index.js';
+import { generateRarity } from './src/main.js';
 
 (() => {
-  buildSetup();
-  generateRarity();
+  connectToDatabase().then(() => {
+    buildSetupFolder();
+    generateRarity();
+  });
 })();

@@ -16,6 +16,8 @@ An NFT rarity generator compatible with multiple chains
 
 <ol>
 
+<li><a  href="#prerequisite">Prerequisite</a></li>
+
 <li><a  href="#installation">Installation</a></li>
 
 <li><a  href="#usage">Usage</a></li>
@@ -48,13 +50,18 @@ Alternatively you can run this command if you have yarn installed.
 
 <p  align="right">(<a  href="#top">back to top</a>)</p>
 
+# Prerequisite
+
+1. [Node](https://nodejs.org/) version: `>= 16.16.0`
+2. [Alchemy](https://www.alchemy.com/) profile: `Alchemy API key is required`
+3. [MongoDB](https://cloud.mongodb.com/): `local or cluster link`
+4. You must have your `.env` file setup correctly. Copy the `.env.example` and remove the `.example` part and provide the following fields: `ALCHEMY_API_KEY`, `MONGO_DB_URL`, `CONTRACT_ADDRESS` and `FILE_NAME` (the latter is optional)
+
+<p  align="right">(<a  href="#top">back to top</a>)</p>
+
 # Usage
 
-Firstly set up your `.env` by removing the `.example` part of the `.env.example` file in the root directory and provide your [Alchemy](https://www.alchemy.com/) **ALCHEMY_API_KEY**
-
-    ALCHEMY_API_KEY="YOUR_ALCHEMY_API_KEY"
-
-In the `config.js`you can set the **contractAddress**, **fileName**, **logPages** features.
+In the `config.js` you can set the **contractAddress**, **fileName**, **logPages** features.
 
 Set the **contractAddress** to the collection address you would like to generate the data for.
 

@@ -2,7 +2,8 @@
   "name": "nft-rarity",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "type": "module",
+  "exports": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "node index.js"
@@ -11,14 +12,20 @@
   "license": "ISC",
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
-    "alchemy-sdk": "^2.0.1",
-    "axios": "^0.27.2",
-    "dotenv": "^16.0.1"
+    "alchemy-sdk": "^2.1.0",
+    "cli-spinners": "^2.7.0",
+    "dotenv": "^16.0.3",
+    "inquirer": "^9.1.2",
+    "mongoose": "^6.6.5",
+    "node-fetch": "^3.2.10"
   },
   "devDependencies": {
-    "eslint": "^8.20.0",
+    "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1"
+  },
+  "engines": {
+    "node": ">=17.0.0"
   }
 }
