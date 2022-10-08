@@ -1,9 +1,9 @@
 import { prepareBaseFolderStructure, connectToDatabase } from './src/persist/index.js';
-import { generateRarity } from './src/main.js';
+import { mainMenuPrompt } from './src/utils/prompts.js';
 
 (() => {
   connectToDatabase().then(() => {
     prepareBaseFolderStructure();
-    generateRarity();
+    mainMenuPrompt();
   });
 })();
