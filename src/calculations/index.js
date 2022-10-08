@@ -1,26 +1,26 @@
-import { getNftsAndMetaData } from './alchemy/index.js';
+import { getNftsAndMetaData } from '../alchemy/index.js';
 import {
   calculateTotalRaritybase,
   generateTally,
   getNftImage,
   resolveLink,
   roundToHundredth
-} from './utils/index.js';
+} from '../utils/index.js';
 import { stdout } from 'node:process';
-import { NftModel } from './persist/db/schemas.js';
+import { NftModel } from '../persist/db/schemas.js';
 import {
   RarityGeneratorSpinner,
   RarityGeneratorErrors,
   RarityGeneratorData
-} from './utils/constants.js';
-import { generatorPrompt } from './utils/prompts.js';
+} from '../utils/constants.js';
+import { postCalculationPrompt } from '../utils/prompts.js';
 
-export const generateRarity = async () => {
+export const generateRarity = async (contractAddress) => {
   stdout.write('\n');
   // Start the spinner
   RarityGeneratorSpinner.start('👾 Generating NFT Rarity ');
 
-  const [metadataList, allNfts] = await getNftsAndMetaData();
+  const [metadataList, allNfts] = await getNftsAndMetaData(contractAddress);
 
   const totalMetadata = metadataList.length;
 
@@ -104,8 +104,7 @@ export const generateRarity = async () => {
 
   stdout.write(`\n📈 ${nftArr.length}/${allNfts.length} rarity data ready to be saved\n`);
 
-  RarityGeneratorData.storeCalculations(nftArr);
-  RarityGeneratorData.storeNfts(allNfts);
+  RarityGeneratorData.storeCalculations(nftArr).storeNfts(allNfts);
 
-  await generatorPrompt();
+  await postCalculationPrompt();
 };
