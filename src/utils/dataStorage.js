@@ -1,25 +1,33 @@
-export class DataStorage {
-  #nftData = [];
-  #calculationData = [];
-
-  cleanData = () => {
-    this.#nftData = [];
-    this.#calculationData = [];
+export const createDataStorage = () => {
+  const state = {
+    calculationData: [],
+    nftData: []
   };
 
-  getCalculationData = () => this.#calculationData;
-  getNftData = () => this.#nftData;
-
-  hasCalculationData = () => this.#calculationData.length > 0;
-  hasNftData = () => this.#nftData.length > 0;
-
-  storeNfts = (nftData) => {
-    this.#nftData = nftData;
-    return this;
-  };
-
-  storeCalculations = (calculationData) => {
-    this.#calculationData = calculationData;
-    return this;
-  };
-}
+  return Object.freeze({
+    cleanData: function () {
+      state.nftData = [];
+      state.calculationData = [];
+    },
+    getCalculationData: function () {
+      return state.calculationData;
+    },
+    getNftData: function () {
+      return state.nftData;
+    },
+    hasCalculationData: function () {
+      return state.calculationData.length > 0;
+    },
+    hasNftData: function () {
+      return state.nftData.length > 0;
+    },
+    storeNfts: function (nftData) {
+      state.nftData = nftData;
+      return this;
+    },
+    storeCalculations: function (calculationData) {
+      state.calculationData = calculationData;
+      return this;
+    }
+  });
+};
