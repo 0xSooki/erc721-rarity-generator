@@ -15,7 +15,7 @@ export const insertSingleNftToDatabase = (nft) => {
 export const insertManyNftsToDatabase = (nftList) => {
   if (nftList.length === 0) {
     stdout.write('🔴 Received an empty list of NFTs. Doing nothing...\n');
-    return Promise.resolve(undefined);
+    return Promise.resolve(false);
   }
   stdout.write(`\n👉 Trying to insert ${nftList.length} record(s) into the DB\n`);
 
