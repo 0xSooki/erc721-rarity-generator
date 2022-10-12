@@ -13,6 +13,8 @@
 # production
 /build
 
+/nfts
+
 # misc
 .DS_Store
 *.pem

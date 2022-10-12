@@ -6,21 +6,22 @@
   "exports": "./index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node index.js"
+    "start": "node index.js"
   },
   "author": "Sooki (@0xSooki)",
   "license": "ISC",
   "dependencies": {
     "@alch/alchemy-sdk": "^1.2.0",
-    "alchemy-sdk": "^2.1.0",
+    "alchemy-sdk": "^2.1.1",
+    "archiver": "^5.3.1",
     "cli-spinners": "^2.7.0",
     "dotenv": "^16.0.3",
-    "inquirer": "^9.1.2",
+    "inquirer": "^9.1.3",
     "mongoose": "^6.6.5",
     "node-fetch": "^3.2.10"
   },
   "devDependencies": {
-    "eslint": "^8.24.0",
+    "eslint": "^8.25.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1"

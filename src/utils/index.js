@@ -1,6 +1,10 @@
 import { stdout } from 'node:process';
 import fetch from 'node-fetch';
 
+export const getTimestamp = () => {
+  return new Date().toISOString();
+};
+
 export const resolveLink = (url) => {
   if (!url || !url.includes('ipfs://')) return url;
   return url.replace('ipfs://', 'https://gateway.ipfs.io/ipfs/');
