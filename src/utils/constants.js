@@ -16,10 +16,10 @@ if (!CONTRACT_ADDRESS) {
   throw new Error(`${CONTRACT_ADDRESS} must be defined!`);
 }
 
-export const MONGO_DB_URL = process.env.MONGO_DB_URL;
+export const DB_URL = process.env.DB_URL;
 
-if (!MONGO_DB_URL) {
-  throw new Error(`${MONGO_DB_URL} must be defined!`);
+if (!DB_URL) {
+  throw new Error(`${DB_URL} must be defined!`);
 }
 
 export const FILE_NAME = process.env['FILE_NAME'] || 'nft-data';

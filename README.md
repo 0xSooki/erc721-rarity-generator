@@ -54,8 +54,8 @@ Alternatively you can run this command if you have yarn installed.
 
 1. [Node](https://nodejs.org/) version: `>= 16.16.0`
 2. [Alchemy](https://www.alchemy.com/) profile: `Alchemy API key is required`
-3. [MongoDB](https://cloud.mongodb.com/): `local or cluster link`
-4. You must have your `.env` file setup correctly. Copy the `.env.example` and remove the `.example` part and provide the following fields: `ALCHEMY_API_KEY`, `MONGO_DB_URL`, `CONTRACT_ADDRESS` and `FILE_NAME` (the latter is optional)
+3. [MongoDB/Mysql](https://cloud.mongodb.com/): `local or cluster link`
+4. You must have your `.env` file setup correctly. Copy the `.env.example` and remove the `.example` part and provide the following fields: `ALCHEMY_API_KEY`, `DB_URL`, `CONTRACT_ADDRESS` and `FILE_NAME` (the latter is optional)
 
 <p  align="right">(<a  href="#top">back to top</a>)</p>
 

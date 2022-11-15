@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { stdout } from 'node:process';
-import { MONGO_DB_URL } from '../../utils/constants.js';
+import { DB_URL } from '../../../utils/constants.js';
 
 // Setup listeners
 mongoose.connection.once('open', () => {
@@ -24,12 +24,13 @@ mongoose.connection.once('open', () => {
   });
 });
 
-export const connectToDatabase = () => {
+export const connectToMongodb = () => {
+  const { pathname = '/nft-rarity' } = new URL(DB_URL);
   stdout.write('[1/3] 🌱 Start Connecting to MongoDB\n');
 
   return mongoose
-    .connect(MONGO_DB_URL, {
-      dbName: 'nft-rarity',
+    .connect(DB_URL, {
+      dbName: pathname.slice(1),
       useNewUrlParser: true,
       useUnifiedTopology: true
     })

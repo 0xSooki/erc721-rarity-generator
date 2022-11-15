@@ -17,6 +17,7 @@
     "dotenv": "^16.0.3",
     "inquirer": "^9.1.2",
     "mongoose": "^6.6.5",
+    "mysql2": "^2.3.3",
     "node-fetch": "^3.2.10"
   },
   "devDependencies": {
