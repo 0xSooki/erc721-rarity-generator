@@ -7,15 +7,11 @@ import {
   roundToHundredth
 } from '../utils/index.js';
 import { stdout } from 'node:process';
-import { NftModel } from '../persist/db/schemas.js';
-import {
-  RarityGeneratorSpinner,
-  RarityGeneratorErrors,
-  RarityGeneratorData
-} from '../utils/constants.js';
-import { postCalculationPrompt } from '../utils/prompts.js';
+import { NftModel } from './persist/db/mongodb/schemas.js';
+import { RarityGeneratorSpinner, RarityGeneratorErrors } from './utils/constants.js';
+import { generatorPrompt } from './utils/prompts.js';
 
-export const generateRarity = async (contractAddress) => {
+export const generateRarity = async (db) => {
   stdout.write('\n');
   // Start the spinner
   RarityGeneratorSpinner.start('👾 Generating NFT Rarity ');
@@ -104,7 +100,10 @@ export const generateRarity = async (contractAddress) => {
 
   stdout.write(`\n📈 ${nftArr.length}/${allNfts.length} rarity data ready to be saved\n`);
 
-  RarityGeneratorData.storeCalculations(nftArr).storeNfts(allNfts);
+  // Save data into the DB
+  await addMultipleNFTs(db, nftArr);
+  // Save data into a JSON file locally
+  saveDataToJSON(nftArr);
 
   await postCalculationPrompt();
 };

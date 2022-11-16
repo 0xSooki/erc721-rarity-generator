@@ -1,7 +1,7 @@
 import { stdout } from 'node:process';
 import { NftModel } from './schemas.js';
 
-export const insertSingleNftToDatabase = (nft) => {
+export const addSingletonToMongodb = (nft) => {
   stdout.write(`\n👉 Trying to insert NFT #${nft.token_id} into the DB\n`);
 
   return new NftModel(nft)
@@ -12,7 +12,7 @@ export const insertSingleNftToDatabase = (nft) => {
     .catch((error) => stdout.write(`❗ ${error}❗\n`));
 };
 
-export const insertManyNftsToDatabase = (nftList) => {
+export const addMultipleToMongodb = (nftList) => {
   if (nftList.length === 0) {
     stdout.write('🔴 Received an empty list of NFTs. Doing nothing...\n');
     return Promise.resolve(false);

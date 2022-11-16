@@ -1,12 +1,2 @@
-export { connectToDatabase } from './db/connect.js';
-export { insertManyNftsToDatabase, insertSingleNftToDatabase } from './db/actions.js';
-export { compressDataTo } from './local/compressor.js';
-export {
-  prepareBaseFolderStructure,
-  saveErrorsToJson,
-  saveErrorsToZip,
-  saveNFTsToJson,
-  saveNFTsToZip,
-  saveCalculationsToJson,
-  saveCalculationsToZip
-} from './local/index.js';
+export { connectToDatabase, addMultipleNFTs, addSingletonNFT } from './db/index.js';
+export { buildSetupFolder, saveDataToJSON } from './local/index.js';
